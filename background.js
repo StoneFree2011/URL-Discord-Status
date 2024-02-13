@@ -10,7 +10,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     }
 });
 
-async function doRequest(text, token) {
+async function doRequest(text, emoji, token) {
     const STATUS_URL = "https://discord.com/api/v9/users/@me/settings";
     const headers = {
         'Content-Type': 'application/json',
@@ -21,7 +21,10 @@ async function doRequest(text, token) {
             method: 'PATCH',
             headers: headers,
             body: JSON.stringify({
-                custom_status: { text: text }
+                custom_status: {
+                    text: text,
+                    emoji_name: emoji
+                }
             })
         });
         if (response.ok) {
@@ -57,10 +60,10 @@ function handleTabChange(tab) {
                     }, 1000); // Задержка 1 секунда
                 } else {
                     currentUrl = currentUrl.replace(/^https?:\/\//i, ""); // Удаляем приставку "http://" или "https://"
-                    doRequest("Смотрит " + currentUrl, token);
+                    doRequest("Смотрит " + currentUrl, '👁‍🗨', token);
                 }
             } else {
-                doRequest(" ", token);
+                doRequest(" ", "none", token);
             }
         });
     }
@@ -82,9 +85,9 @@ function content_name(tab, token, host, content) { //для популярных
     }).then(result => {
         var fieldValue = result[0].result;
         if (fieldValue) {
-            doRequest("Смотрит '" + fieldValue + "' на " + host, token);
+            doRequest("Смотрит '" + fieldValue + "' на " + host, '🎞', token);
         } else {
-            doRequest("Смотрит " + host, token);
+            doRequest("Смотрит " + host, '🎞', token);
         }
     }).catch(error => {
         console.error("Error executing script:", error);
