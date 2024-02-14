@@ -54,9 +54,17 @@ function handleTabChange(tab) {
                     setTimeout(() => {
                         content_name(tab, token, "YouTube", "#title > h1 > yt-formatted-string");
                     }, 3000);
-                } else if (currentUrl.includes('hd.kinopoisk')) { //не работает чет
+                } else if (currentUrl.includes('kinopoisk')) { //не работает чет
                     setTimeout(() => {
-                        content_name(tab, token, "КиноПоиск", "#__next > div.AppPageConstructor_root__tNsyi > div.FullLayout_root__LJhCD.main - view.with - transition > div > div > main > div.FilmContent_wrapper__EicQU > div > div > section > div > div.ContentWrapper_title__uVspG > h1 > span");
+                        content_name(tab, token, "КиноПоиск", "#__next > div.AppPageConstructor_root__tNsyi > div.FullLayout_root__LJhCD.main-view.with-transition > div > div > main > div.FilmContent_wrapper__EicQU > div > div > section > div > div.ContentWrapper_title__uVspG > h1 > span");
+                    }, 1000); // Задержка 1 секунда
+                } else if (currentUrl.includes('jut.su')) {
+                    setTimeout(() => {
+                        special_content_name(tab, token, "jut.su", "#dle-content > div > h1 > span", "Смотреть ");
+                    }, 1000); // Задержка 1 секунда
+                } else if (currentUrl.includes('animego')) {
+                    setTimeout(() => {
+                        content_name(tab, token, "Animego", "#content > div > div.media.mb-3.d-none.d-block.d-md-flex > div.media-body > div.anime-title > div > h1");
                     }, 1000); // Задержка 1 секунда
                 } else {
                     currentUrl = currentUrl.replace(/^https?:\/\//i, ""); // Удаляем приставку "http://" или "https://"
@@ -85,6 +93,32 @@ function content_name(tab, token, host, content) { //для популярных
     }).then(result => {
         var fieldValue = result[0].result;
         if (fieldValue) {
+            doRequest("Смотрит '" + fieldValue + "' на " + host, '🎞', token);
+        } else {
+            doRequest("Смотрит " + host, '🎞', token);
+        }
+    }).catch(error => {
+        console.error("Error executing script:", error);
+    });
+}
+
+function special_content_name(tab, token, host, content, special) { //где нужно убрать что-то из названия
+    chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        function: (content) => {
+            var element = document.querySelector(content); //надо понять, почему content сюда не передается
+            if (element) {
+                console.log("Element found:", element.textContent);
+                return element.textContent;
+            } else {
+                console.log("Element not found: ", content);
+                return null;
+            }
+        }, args: [content] // Передаем значение content в функцию
+    }).then(result => {
+        var fieldValue = result[0].result;
+        if (fieldValue) {
+            fieldValue = fieldValue.replace(special, "");
             doRequest("Смотрит '" + fieldValue + "' на " + host, '🎞', token);
         } else {
             doRequest("Смотрит " + host, '🎞', token);
