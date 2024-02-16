@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     var autoButton = document.getElementById('autoButton');
     autoButton.addEventListener('click', function () {
-        getCookie("discordUserToken", function (token) {
+        getCookie(function (token) {
             if (token) {
                 saveToken(token);
                 toggleExtension(true);
@@ -63,12 +63,26 @@ function toggleExtension(enabled) { //включить расширение
     });
 }
 
-function getCookie(name, callback) {
-    chrome.cookies.get({ url: 'https://discord.com', name: name }, function(cookie) {
+function getCookie(callback) {
+    chrome.cookies.get({ url: 'https://discord.com', name: 'discordUserToken' }, function(cookie) {
         if (cookie) {
             callback(cookie.value);
-        } else {
-            callback(null);
+        } else { //если найти куки в браузере не удалось
+            chrome.tabs.query({ url: "https://discord.com/*" }, function (tabs) {
+                if (tabs.length > 0) {
+                    chrome.cookies.get({ url: tabs[0].url, name: 'discordUserToken' }, function (cookie) {
+                        if (cookie) {
+                            callback(cookie.value);
+                        } else {
+                            alert("Go to discord.com and try again")
+                            callback(null);
+                        }
+                    });
+                } else {
+                    alert("Go to discord.com and try again")
+                    callback(null);
+                }
+            });
         }
     });
 }
