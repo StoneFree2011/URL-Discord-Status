@@ -1,5 +1,5 @@
 {
-    "manifest_version": 3,
+    "manifest_version": 2,
     "name": "URL Discord Status",
     "version": "1.2",
     "description": "Share your Online activity with friends! This extension will put URl you watching into your Discord custom status.",
@@ -10,27 +10,25 @@
         "default_popup": "popup.html",
         "default_icon": {
             "16": "/images/icons8-furry-discord-16.png",
-            "32": "/images/icons8-furry-discord-32.png",
             "48": "/images/icons8-furry-discord-48.png",
-            "64": "/images/icons8-furry-discord-64.png",
             "128": "/images/icons8-furry-discord-128.png"
         }
     },
     "icons": {
-        "16": "/images/icons8-furry-discord-16.png",
-        "32": "/images/icons8-furry-discord-32.png",
         "48": "/images/icons8-furry-discord-48.png",
-        "64": "/images/icons8-furry-discord-64.png",
-        "128": "/images/icons8-furry-discord-128.png"
+        "96": "/images/icons8-furry-discord-96.png"
     },
     "permissions": [
         "tabs",
         "activeTab",
         "storage",
         "scripting",
-        "cookies"
-    ],
-    "host_permissions": [
+        "cookies",
         "*://*/*"
-    ]
+    ],
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "your-extension-id@your-domain.com"
+        }
+    }
 }
