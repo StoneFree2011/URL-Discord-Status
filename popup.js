@@ -48,6 +48,11 @@ function updateIndicator(extensionEnabled) { //индикатор включен
         chrome.action.setBadgeBackgroundColor({ color: [255, 0, 0, 255] });
         chrome.action.setBadgeText({ text: "OFF" }); //расширение не работает
     }
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        var tab = tabs[0];
+        chrome.runtime.sendMessage({ action: "handleTabChange", data: { tab: tab } });
+    });
+
 }
 
 function saveToken(token) { //сохранить введенный токен
