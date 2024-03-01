@@ -49,6 +49,11 @@ function updateIndicator(extensionEnabled) {
         browser.action.setBadgeBackgroundColor({ color: [255, 0, 0, 255] });
         browser.action.setBadgeText({ text: "OFF" });
     }
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        var tab = tabs[0];
+        chrome.runtime.sendMessage({ action: "handleTabChange", data: { tab: tab } });
+    });
+
 }
 
 function saveToken(token) {
